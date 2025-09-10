@@ -102,3 +102,31 @@ input:focus,textarea:focus{border-color:#36405a;box-shadow:0 0 0 3px rgba(124,92
   .container{padding:16px}
   .hero h1{font-size:34px}
 }
+
+/* --- Notion-like editor --- */
+.project-header{display:flex; flex-direction:column; gap:8px; margin-bottom:16px}
+.title-input{
+  font-size:28px; font-weight:800; background:transparent; color:var(--text);
+  border:1px solid var(--border); border-radius:12px; padding:10px 12px;
+}
+.desc-input{
+  font-size:14px; background:transparent; color:var(--muted);
+  border:1px solid var(--border); border-radius:12px; padding:10px 12px;
+}
+.title-input:focus,.desc-input:focus{outline:none; border-color:#2f3750}
+
+.toolbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:8px 0 16px}
+.editor{display:flex; flex-direction:column; gap:8px}
+
+.block{position:relative; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px 12px}
+.block h1,.block h2,.block p,.block pre{margin:0}
+.block-input{min-height:24px; outline:none}
+.bullet-line{display:flex; gap:10px; align-items:flex-start}
+.todo-line{display:flex; gap:10px; align-items:center}
+.code{white-space:pre-wrap; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#0f1220; border-radius:8px; padding:10px; border:1px dashed #2a3042}
+.block-tools{position:absolute; top:8px; right:8px}
+.block-tools button{background:transparent; border:1px solid var(--border); border-radius:8px; color:#aeb6cc; cursor:pointer; padding:2px 6px}
+.block-tools button:hover{background:#1a2030}
+
+.empty{opacity:.7; padding:16px; border:1px dashed var(--border); border-radius:12px; text-align:center}
+
