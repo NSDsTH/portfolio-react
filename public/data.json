@@ -1,0 +1,105 @@
+[
+  {
+    "title": "Portfolio UI",
+    "slug": "portfolio-ui",
+    "desc": "Figma → React/Vite with clean tokens.",
+    "tags": ["React", "CSS"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "Portfolio UI — Overview" },
+      {
+        "type": "paragraph",
+        "text": "โปรเจกต์พอร์ตที่ออกแบบจาก Figma แล้วเขียนจริงด้วย React/Vite + Design Tokens"
+      },
+      {
+        "type": "list",
+        "style": "bullet",
+        "text": "Tech: React/Vite/Tailwind\nDesign Tokens: CSS vars\nDeploy: Vercel"
+      }
+    ]
+  },
+  {
+    "title": "IoT Production Line",
+    "slug": "iot-production-line",
+    "desc": "Realtime KPIs for factory lines.",
+    "tags": ["Charts", "SQL"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "IoT Production Line" },
+      {
+        "type": "paragraph",
+        "text": "ดึงข้อมูล sensor/PLC ผ่าน gateway → เก็บฐานข้อมูล → สร้าง KPI แบบเรียลไทม์"
+      },
+      {
+        "type": "callout",
+        "text": "จุดเด่น: วัด OEE/Throughput/Reject แบบ real-time ใช้ dashboard เดียว"
+      },
+      { "type": "divider" }
+    ]
+  },
+  {
+    "title": "RAG Chatbot",
+    "slug": "rag-chatbot",
+    "desc": "Qwen + Qdrant, internal knowledge.",
+    "tags": ["LLM", "VectorDB"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "RAG Chatbot — Overview" },
+      {
+        "type": "paragraph",
+        "text": "แชตบอทถาม-ตอบความรู้ภายในองค์กร ใช้ Qdrant เก็บเวกเตอร์ + Qwen เป็น LLM"
+      },
+      { "type": "heading", "level": 2, "text": "Stack" },
+      {
+        "type": "list",
+        "style": "bullet",
+        "text": "Embedding: bge-small / jina-embeddings\nVector DB: Qdrant (HNSW, cosine)\nBackend: Node/Express"
+      },
+      { "type": "heading", "level": 2, "text": "How it works" },
+      { "type": "paragraph", "text": "1) Ingest → 2) Retrieve → 3) Rerank → 4) Generate" },
+      {
+        "type": "code",
+        "language": "js",
+        "text": "// example: embed flow\nawait embed(doc)\n// ..."
+      },
+      { "type": "paragraph", "text": "THANK" }
+    ]
+  },
+  {
+    "title": "PCB Defect Detection",
+    "slug": "pcb-defect-detection",
+    "desc": "Next.js widget set with filters.",
+    "tags": ["Next.js", "UI"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "PCB Defect Detection" },
+      {
+        "type": "paragraph",
+        "text": "วิดเจ็ตสำหรับดูผลตรวจจับ defect: filter ตามชนิดตำหนิ / วันเวลา / รุ่น"
+      }
+    ]
+  },
+  {
+    "title": "Computer Vision",
+    "slug": "computer-vision",
+    "desc": "Pose/Action recognition pipeline.",
+    "tags": ["CV", "Py"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "Computer Vision" },
+      {
+        "type": "paragraph",
+        "text": "โครงท่อสำหรับ Pose/Action recognition: MediaPipe → ST-GCN → Inference"
+      }
+    ]
+  },
+  {
+    "title": "Automation Pack",
+    "slug": "automation-pack",
+    "desc": "Scripts & bots for ops.",
+    "tags": ["Node", "Ops"],
+    "content": [
+      { "type": "heading", "level": 1, "text": "Automation Pack" },
+      {
+        "type": "paragraph",
+        "text": "รวมสคริปต์ออโต้งาน routine (เช่น ดึงรายงาน/ส่งอีเมล/เคลียร์ไฟล์)"
+      },
+      { "type": "todo", "text": "เพิ่มตัวตั้งเวลาส่งรายงานประจำวัน", "checked": false }
+    ]
+  }
+]

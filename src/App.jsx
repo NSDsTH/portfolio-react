@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar, Footer } from "./components";
-import { Home, About, Skills, Projects, Contact, NewProject, ProjectDetail } from "./pages";
+import { Home, About, Skills, Projects, Contact, NewProject, ProjectDetail, ProjectViewer } from "./pages";
 import "./App.css";
 
 export default function App() {
@@ -16,7 +16,8 @@ export default function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/projects/new" element={<NewProject />} />
-            <Route path="/projects/:slug" element={<ProjectDetail />} />
+            <Route path="/projects-dev/:slug" element={<ProjectDetail />} />
+            <Route path="/projects/:slug" element={<ProjectViewer />} />
           </Routes>
       </main>
       <Footer />

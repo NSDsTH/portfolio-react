@@ -1,115 +1,123 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import useProjects from '../store/useProjects'
+// src/pages/ProjectDetail.jsx
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import EditorBlock from "../components/EditorBlock";
+import data from "../../public/data.json"; // อ่านไฟล์ JSON ต้นทาง (read-only ตอนรันจริง)
 
-const newId = () => Math.random().toString(36).slice(2,9)
+const newId = () => Math.random().toString(36).slice(2, 9);
 
-function Block({ block, onChange, onToggle, onRemove }) {
-  const ref = useRef(null)
-  useEffect(()=> { if (!block._mounted && ref.current) ref.current.focus() }, [])
-
-  const commonProps = {
-    ref,
-    contentEditable: true,
-    suppressContentEditableWarning: true,
-    onInput: e => onChange({ ...block, text: e.currentTarget.textContent }),
-    className: 'block-input'
-  }
-
-  return (
-    <div className={`block block-${block.type}`}>
-      {block.type === 'h1' && <h1 {...commonProps}>{block.text}</h1>}
-      {block.type === 'h2' && <h2 {...commonProps}>{block.text}</h2>}
-      {block.type === 'p'  && <p  {...commonProps}>{block.text}</p>}
-      {block.type === 'bullet' && (
-        <div className="bullet-line">
-          <span>•</span>
-          <div {...commonProps} />
-        </div>
-      )}
-      {block.type === 'todo' && (
-        <div className="todo-line">
-          <input type="checkbox" checked={!!block.checked} onChange={()=> onToggle({ ...block, checked: !block.checked })} />
-          <div {...commonProps} />
-        </div>
-      )}
-      {block.type === 'code' && (
-        <pre className="code" contentEditable spellCheck={false}
-             onInput={e => onChange({ ...block, text: e.currentTarget.textContent })}>
-          {block.text}
-        </pre>
-      )}
-      <div className="block-tools">
-        <button onClick={()=> onRemove(block.id)} title="Delete">✕</button>
-      </div>
-    </div>
-  )
+// ===== เพิ่ม util: export ไฟล์ JSON =====
+function downloadJSON(filename, jsonObj) {
+  const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
-export default function ProjectDetail(){
-  const { slug } = useParams()
-  const { getProject, updateProject } = useProjects()
-  const project = getProject(slug)
+// ------------------------ Page ------------------------
+export default function ProjectDetail() {
+  const { slug } = useParams();
+  const project = data.find((p) => p.slug === slug); // อ่านข้อมูลจากไฟล์ JSON
 
-  const [title, setTitle] = useState(project?.title || '')
-  const [desc, setDesc]     = useState(project?.desc  || '')
-  const [blocks, setBlocks] = useState(project?.content || [])
+  const [title, setTitle] = useState(project?.title || "");
+  const [desc, setDesc] = useState(project?.desc || "");
+  const [blocks, setBlocks] = useState(project?.content || []);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(()=> {
-    if (!project) return
-    setTitle(project.title); setDesc(project.desc); setBlocks(project.content || [])
-  }, [slug]) // load when slug changes
+  useEffect(() => {
+    if (!project) return;
+    setTitle(project.title);
+    setDesc(project.desc);
+    setBlocks(project.content || []);
+  }, [slug]);
 
-  // autosave (debounce 500ms)
-  useEffect(()=> {
-    const t = setTimeout(()=> {
-      if (!project) return
-      updateProject(slug, { title, desc, content: blocks })
-    }, 500)
-    return ()=> clearTimeout(t)
-  }, [title, desc, blocks])
+  // ----- NEW: ปุ่ม Save → Export JSON -----
+  const onSaveToJson = () => {
+    setSaving(true);
+    try {
+      // รวมค่าที่แก้ไขเข้า dataset เดิม
+      const updated = data.map(p =>
+        p.slug === slug ? { ...p, title, desc, content: blocks } : p
+      );
+      // ดาวน์โหลดไฟล์ data.json ใหม่
+      downloadJSON("data.json", updated);
+    } finally {
+      setTimeout(() => setSaving(false), 300);
+    }
+  };
 
   if (!project) {
     return (
-      <section className="section"><div className="container">
-        <h2>Project not found</h2>
-        <p className="lead">เช็คลิงก์หรือกลับไปหน้า Projects</p>
-      </div></section>
-    )
+      <section className="section">
+        <div className="container">
+          <h2>Project not found</h2>
+          <p className="lead">เช็คลิงก์หรือกลับไปหน้า Projects</p>
+        </div>
+      </section>
+    );
   }
 
-  const addBlock = (type) => {
-    setBlocks(prev => [...prev, { id:newId(), type, text:'', checked:false, _mounted:false }])
-  }
-  const onChange = (b) => {
-    setBlocks(prev => prev.map(x => x.id===b.id ? { ...b, _mounted:true } : x))
-  }
-  const onToggle = (b) => {
-    setBlocks(prev => prev.map(x => x.id===b.id ? { ...b } : x))
-  }
-  const onRemove = (id) => setBlocks(prev => prev.filter(x => x.id !== id))
+  const addBlock = (type, extra = {}) => {
+    const defByType = {
+      heading: { text: "", level: 1 }, paragraph: { text: "" },
+      list: { text: "", style: "bullet" }, todo: { text: "", checked: false },
+      code: { text: "", language: "text" }, image: { url: "", caption: "" },
+      callout: { text: "" }, divider: {},
+    };
+    const d = { id: newId(), type, _mounted: false, ...(defByType[type] || { text: "" }), ...extra };
+    setBlocks(prev => [...prev, d]);
+  };
+  const insertAfter = (id, newType="paragraph") => {
+    setBlocks(prev => {
+      const i = prev.findIndex(b => b.id === id);
+      const copy = [...prev];
+      const def = { id: newId(), type:newType, text:"", _mounted:false };
+      copy.splice(i+1, 0, def);
+      return copy;
+    });
+  };
+  const onChange = (b) => setBlocks(prev => prev.map(x => x.id === b.id ? { ...b, _mounted:true } : x));
+  const onToggle  = (b) => setBlocks(prev => prev.map(x => x.id === b.id ? { ...b } : x));
+  const onRemove  = (id) => setBlocks(prev => prev.filter(x => x.id !== id));
+  const onFocusMove = () => {};
 
   return (
     <section className="section">
-      <div className="container" style={{maxWidth:860}}>
+      <div className="container" style={{ maxWidth: 860 }}>
         <div className="project-header">
-          <input className="title-input" value={title} onChange={e=>setTitle(e.target.value)} placeholder="Untitled" />
-          <input className="desc-input" value={desc} onChange={e=>setDesc(e.target.value)} placeholder="Short description…" />
+          <input className="title-input" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="Untitled"/>
+          <input className="desc-input"  value={desc}  onChange={(e)=>setDesc(e.target.value)}  placeholder="Short description…"/>
         </div>
 
         <div className="toolbar">
           <span className="kicker">Add block</span>
-          <button className="filter" onClick={()=>addBlock('h1')}>H1</button>
-          <button className="filter" onClick={()=>addBlock('h2')}>H2</button>
-          <button className="filter" onClick={()=>addBlock('p')}>Text</button>
-          <button className="filter" onClick={()=>addBlock('bullet')}>• Bullet</button>
-          <button className="filter" onClick={()=>addBlock('todo')}>☑ To-do</button>
-          <button className="filter" onClick={()=>addBlock('code')}>{`</>`} Code</button>
+          <button className="filter" onClick={()=>addBlock("heading", { level:1 })}>H1</button>
+          <button className="filter" onClick={()=>addBlock("heading", { level:2 })}>H2</button>
+          <button className="filter" onClick={()=>addBlock("heading", { level:3 })}>H3</button>
+          <button className="filter" onClick={()=>addBlock("paragraph")}>Text</button>
+          <button className="filter" onClick={()=>addBlock("list")}>• List</button>
+          <button className="filter" onClick={()=>addBlock("todo")}>☑ To-do</button>
+          <button className="filter" onClick={()=>addBlock("code")}>{"</>"} Code</button>
+          <button className="filter" onClick={()=>addBlock("image")}>🖼 Image</button>
+          <button className="filter" onClick={()=>addBlock("callout")}>💡 Callout</button>
+          <button className="filter" onClick={()=>addBlock("divider")}>— Divider</button>
+
+          {/* ปุ่ม Save JSON */}
+          <div style={{ marginLeft: "auto" }} />
+          <button className="filter" onClick={onSaveToJson} disabled={saving}>
+            {saving ? "Saving…" : "Save (Export JSON)"}
+          </button>
         </div>
 
         <div className="editor">
-          {blocks.map(b => (
-            <Block key={b.id} block={b} onChange={onChange} onToggle={onToggle} onRemove={onRemove}/>
+          {blocks.map((b) => (
+            <EditorBlock key={b.id} block={b} onChange={onChange} onToggle={onToggle}
+                   onRemove={onRemove} onInsertAfter={(id)=>insertAfter(id)} onFocusMove={onFocusMove}/>
           ))}
           {blocks.length === 0 && (
             <div className="empty">
@@ -118,6 +126,8 @@ export default function ProjectDetail(){
           )}
         </div>
       </div>
+
+      {/* style เดิมของไฟล์นี้คงไว้ได้ */}
     </section>
-  )
+  );
 }
