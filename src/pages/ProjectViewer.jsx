@@ -1,7 +1,10 @@
 // src/pages/ProjectViewer.jsx
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useParams } from "react-router-dom";
-import data from "../../public/data.json"; 
+import data from "../../public/data.json";
+import "github-markdown-css/github-markdown.css";
 
 function ViewBlock({ b }) {
   // เลือก "การ์ด" ให้บางประเภท
@@ -65,56 +68,89 @@ function ViewBlock({ b }) {
 
 export default function ProjectViewer() {
   const { slug } = useParams();
+  const [content, setContent] = useState("");
 
-  const project = data.find((p) => p.slug === slug);
+  // const project = data.find((p) => p.slug === slug);
 
-  if (!project)
-    return (
-      <div className="wrap">
-        <h2>Not found</h2>
-      </div>
-    );
+  const project = {
+    FOLDER: "iot_project",
+    FILE_NAME: "iot.md",
+  };
+
+  const getFile = () => {
+    const path = `/${project.FOLDER}/${project.FILE_NAME}`;
+
+    fetch(path)
+      .then((res) => {
+        if (!res.ok) throw new Error("File not found");
+        return res.text();
+      })
+      .then((text) => {
+        // ป้องกันกรณี path ผิดแล้ว Server ส่ง index.html กลับมา
+        if (text.trim().startsWith("<!DOCTYPE html>")) {
+          throw new Error("Got HTML instead of Markdown");
+        }
+        setContent(text);
+      })
+      .catch((err) => {
+        setContent(`# Error Loading Project\n\nCould not load file: ${path}`);
+      });
+  };
+
+  useEffect(() => {
+    getFile();
+  }, []);
 
   return (
-    <div className="wrap viewer">
-      <header className="v-head">
-        <h1>{project.title}</h1>
-        {project.desc ? <p className="vd">{project.desc}</p> : null}
-      </header>
-
-      <main className="v-content">
-        {Array.isArray(project.content) && project.content.length > 0 ? (
-          project.content.map((b) => <ViewBlock key={b.id} b={b} />)
-        ) : (
-          <p className="muted">No content.</p>
-        )}
-      </main>
-
-      <style>{`
-  .wrap.viewer{max-width:860px;margin:0 auto;padding:24px}
-  .v-head h1{font-size:28px;margin:0 0 6px;font-weight:700;color:var(--text)}
-  .vd{color:var(--muted);margin:0 0 20px}
-  .v-content{display:grid;gap:12px}
-
-  .v-block{padding:0;color:var(--text)}
-  .v-card{padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text)}
-  .vh-1{font-size:26px;font-weight:700}
-  .vh-2{font-size:20px;font-weight:700}
-  .vh-3{font-size:18px;font-weight:700}
-  .vp{line-height:1.7;color:var(--text)}
-
-  .vlist{padding-left:20px;line-height:1.7}
-  .vtodo{display:flex;gap:8px;align-items:center}
-  .vtodo .done{text-decoration:line-through;color:var(--muted)}
-
-  .vimage img{max-width:100%;border-radius:10px;display:block;border:1px solid var(--border)}
-  .vimage figcaption{text-align:center;color:var(--muted);font-size:12px;margin-top:6px}
-
-  .vcallout{background:var(--callout-bg);border:1px solid var(--callout-border);padding:10px;border-radius:10px;color:var(--text)}
-  .vcode{background:var(--code-bg);color:var(--code-text);padding:14px;border-radius:12px;overflow:auto}
-  .v-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-  .muted{color:var(--muted)}
-`}</style>
+    <div className="markdown-body" style={{ padding: "20px" }}>
+      {/* แก้ไขจุดที่พิมพ์ผิดตรงนี้ครับ จาก / เป็น . */}
+      {content && content.length > 0 ? (
+        <ReactMarkdown
+          urlTransform={(uri) => {
+            if (uri.startsWith("http") || uri.startsWith("/")) return uri;
+            return `/${project.FOLDER}/${uri}`;
+          }}
+          components={{
+            img: ({ alt, ...props }) => (
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  margin: "20px 0",
+                }}
+              >
+                <img
+                  {...props}
+                  alt={alt}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                  }}
+                />
+                {alt && (
+                  <span
+                    style={{
+                      display: "block",
+                      marginTop: "10px",
+                      color: "#6b7280",
+                      fontSize: "0.9rem",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {alt}
+                  </span>
+                )}
+              </span>
+            ),
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }

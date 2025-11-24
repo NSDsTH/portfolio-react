@@ -280,25 +280,3 @@ input:focus, textarea:focus { border-color: color-mix(in srgb, var(--accent), va
 
 .notion-export img { max-width: 100%; height: auto; border-radius: 12px; display: block; margin: 12px auto; }
 .notion-export table { width: 100%; display: block; overflow: auto; }
-
-.markdown-body {
-  /* บังคับพื้นหลังสีขาว */
-  background-color: #ffffff !important; 
-  
-  /* บังคับตัวหนังสือสีดำ (แบบ GitHub) */
-  color: #24292f !important;
-  
-  /* (แถม) ปรับกล่องให้ดูไม่ชิดขอบเกินไป */
-  box-sizing: border-box;
-  min-width: 200px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 45px;
-}
-
-/* ถ้าอยากให้ตารางหรือส่วนอื่นๆ ไม่เพี้ยนเมื่อบังคับโหมด */
-@media (prefers-color-scheme: dark) {
-  .markdown-body {
-    color-scheme: light;
-  }
-}
