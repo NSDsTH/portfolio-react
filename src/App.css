@@ -127,10 +127,10 @@ a { color: inherit; text-decoration: none; }
   /* ชั้นรูป: ปรับขนาด + ตำแหน่ง Y ด้วยตัวแปร --y (ค่าเริ่ม 50%) */
   background:
     url("/avatar.png") center var(--y, 95%) / 125% auto no-repeat,
-    radial-gradient(closest-side at 70% 30%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 60%),
-    linear-gradient(135deg,#8fb5ff,#8a7cff);
-  border:3px solid color-mix(in srgb, var(--border) 70%, transparent);
-  box-shadow:var(--shadow);
+    radial-gradient(closest-side at 70% 30%, color-mix(in srgb, rgb(215, 215, 215) 35%, transparent), transparent 60%),
+    linear-gradient(135deg, rgb(215, 215, 215), rgb(215, 215, 215));
+  border:3px solid white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Replace var(--shadow) with a white box-shadow */
   transition: background-position .2s ease;
 }
 

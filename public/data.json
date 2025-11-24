@@ -1,38 +1,42 @@
 [
   {
-    "title": "Portfolio UI",
-    "slug": "portfolio-ui",
-    "desc": "Figma → React/Vite with clean tokens.",
-    "tags": ["React", "CSS"],
+    "title": "Smart Factory Dashboard using IIoT (Industrial IoT)",
+    "slug": "iot-production-line",
+    "desc": "",
+    "tags": ["React","Node-RED", "SQL"],
     "content": [
-      { "type": "heading", "level": 1, "text": "Portfolio UI — Overview" },
       {
         "type": "paragraph",
-        "text": "โปรเจกต์พอร์ตที่ออกแบบจาก Figma แล้วเขียนจริงด้วย React/Vite + Design Tokens"
+        "text": "This project involves deploying an End-to-End Industrial IoT (IIoT) Data Pipeline to elevate machine data management on the production floor."
       },
+      {
+        "type": "paragraph",
+        "text": "The core objective is to establish a reliable and highly efficient infrastructure to ingest data from Sensors/PLCs via the IoT Gateway, utilizing the Cloud (V-NET) for reliable real-time data acquisition. The system then stores this Time-series data in a central database. We leverage Node-RED/Backend to manage the necessary logic for preliminary analysis and automated alerts, thereby providing the team with the tools required for rapid monitoring and troubleshooting."
+      },
+      {
+        "type": "image",
+        "_mounted": true,
+        "url": "/IoT flow.png",
+        "caption": ""
+      },
+      { "type": "heading", "level": 2, "text": "Stack" },
       {
         "type": "list",
         "style": "bullet",
-        "text": "Tech: React/Vite/Tailwind\nDesign Tokens: CSS vars\nDeploy: Vercel"
+        "text": "Data Ingest: IoT Gateway (V-Box), Cloud (V-NET) and Node-RED\nDatabase: Microsoft SQL\nBackend: Node/Express\nFrontend: React + Recharts"
+      },
+      { "type": "heading", "level": 2, "text": "Features" },
+      {
+        "type": "list",
+        "style": "bullet",
+        "text": "Historical data query (SQL)\nAlert notification (LINE Notify)"
+      },
+      { "type": "heading", "level": 2, "text": "Detailed Data Flow" },
+      {
+        "type": "list",
+        "style": "bullet",
+        "text": "1. Data Acquisition (Edge Layer): Sensors/PLCs capture raw operational data and transmit it to the IoT Gateway (V-Box).\n2. Data Ingestion (Cloud Upload): The V-Box pushes data securely to its proprietary Cloud (V-NET) service in real-time, utilizing the V-NET protocol.\n3. Data Processing and Storage: Node-RED connects to the V-NET Cloud API to pull/receive the data, processes it, and writes the Time-series data into the Microsoft SQL database.\n4. Alerting and Notification: Node-RED or the Backend monitors for Alert Conditions and immediately triggers a notification via LINE Notify.\n5. Data Visualization (Dashboard): The Dashboard (React) requests data from the Backend (Node/Express), which queries Microsoft SQL and uses Polling to simulate a real-time view."
       }
-    ]
-  },
-  {
-    "title": "IoT Production Line",
-    "slug": "iot-production-line",
-    "desc": "Realtime KPIs for factory lines.",
-    "tags": ["Charts", "SQL"],
-    "content": [
-      { "type": "heading", "level": 1, "text": "IoT Production Line" },
-      {
-        "type": "paragraph",
-        "text": "ดึงข้อมูล sensor/PLC ผ่าน gateway → เก็บฐานข้อมูล → สร้าง KPI แบบเรียลไทม์"
-      },
-      {
-        "type": "callout",
-        "text": "จุดเด่น: วัด OEE/Throughput/Reject แบบ real-time ใช้ dashboard เดียว"
-      },
-      { "type": "divider" }
     ]
   },
   {
@@ -53,7 +57,10 @@
         "text": "Embedding: bge-small / jina-embeddings\nVector DB: Qdrant (HNSW, cosine)\nBackend: Node/Express"
       },
       { "type": "heading", "level": 2, "text": "How it works" },
-      { "type": "paragraph", "text": "1) Ingest → 2) Retrieve → 3) Rerank → 4) Generate" },
+      {
+        "type": "paragraph",
+        "text": "1) Ingest → 2) Retrieve → 3) Rerank → 4) Generate"
+      },
       {
         "type": "code",
         "language": "js",
@@ -99,7 +106,11 @@
         "type": "paragraph",
         "text": "รวมสคริปต์ออโต้งาน routine (เช่น ดึงรายงาน/ส่งอีเมล/เคลียร์ไฟล์)"
       },
-      { "type": "todo", "text": "เพิ่มตัวตั้งเวลาส่งรายงานประจำวัน", "checked": false }
+      {
+        "type": "todo",
+        "text": "เพิ่มตัวตั้งเวลาส่งรายงานประจำวัน",
+        "checked": false
+      }
     ]
   }
 ]

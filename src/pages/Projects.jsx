@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import useProjects from '../store/useProjects'
+import data from "../../public/data.json";
 
 export default function Projects(){
-  const { projects } = useProjects()
+  const projects = data;
   const nav = useNavigate()
 
   return (
