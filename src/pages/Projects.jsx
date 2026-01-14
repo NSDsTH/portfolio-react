@@ -6,6 +6,15 @@ export default function Projects(){
   const projects = data;
   const nav = useNavigate()
 
+  const handleFilterSection = (section) => {
+    
+  }
+
+  useEffect(() => {
+    console.log(projects);
+
+  }, []);
+
   return (
     <section className="section" id="projects">
       <div className="container">
@@ -14,11 +23,11 @@ export default function Projects(){
         <div className="filters" style={{justifyContent:'space-between'}}>
           <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
             <button className="filter active">All</button>
-            <button className="filter">Web</button>
+            {/* <button className="filter">Web</button>
             <button className="filter">AI</button>
-            <button className="filter">Design</button>
+            <button className="filter">Design</button> */}
           </div>
-          <button className="btn btn--brand" onClick={()=> nav('/projects/new')}>+ Add Project</button>
+          {/* <button className="btn btn--brand" onClick={()=> nav('/projects/new')}>+ Add Project</button> */}
         </div>
 
         <div className="project-grid">

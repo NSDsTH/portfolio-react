@@ -70,12 +70,27 @@ export default function ProjectViewer() {
   const { slug } = useParams();
   const [content, setContent] = useState("");
 
-  // const project = data.find((p) => p.slug === slug);
+  const [mapFolder, setMapFolder] = useState({
+    "iot-production-line": {
+      FOLDER: "iot_project",
+      FILE_NAME: "iot.md",
+    },
+    "rag-chatbot": {
+      FOLDER: "RAG",
+      FILE_NAME: "RAG.md",
+    },
+    "dms": {
+      FOLDER: "dms",
+      FILE_NAME: "dms.md",
+    },
+    "auto-invoice": {
+      FOLDER: "auto-invoice",
+      FILE_NAME: "auto-invoice.md",
+    },
+  });
 
-  const project = {
-    FOLDER: "iot_project",
-    FILE_NAME: "iot.md",
-  };
+  // const project = data.find((p) => p.slug === slug);
+  const project = mapFolder[slug];
 
   const getFile = () => {
     const path = `/${project.FOLDER}/${project.FILE_NAME}`;
@@ -98,6 +113,7 @@ export default function ProjectViewer() {
   };
 
   useEffect(() => {
+    // console.log(slug);
     getFile();
   }, []);
 

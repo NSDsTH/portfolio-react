@@ -210,6 +210,29 @@ input:focus, textarea:focus { border-color: color-mix(in srgb, var(--accent), va
 @media (max-width: 720px) {
   .container { padding: 16px; }
   .hero h1 { font-size: 34px; }
+
+  /* แก้ไข Navbar: จัดให้เรียงลงมาแนวตั้ง หรือซ่อนเมนูที่ไม่จำเป็น */
+  .nav__wrap {
+    flex-wrap: wrap; /* ยอมให้ตกบรรทัด */
+    gap: 12px;
+    justify-content: center; /* จัดกึ่งกลาง */
+  }
+  
+  /* ถ้าอยากให้เมนู (Home, About...) หายไปในมือถือ เพื่อความสะอาดตา ให้ใช้บรรทัดล่างนี้ */
+  /* .nav__links { display: none; } */
+
+  /* หรือถ้าอยากให้ยังอยู่ แต่เล็กลงและเลื่อนได้ (Horizontal Scroll) */
+  .nav__links {
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto; /* ถ้าล้นให้เลื่อนแนวนอน */
+    padding-bottom: 4px;
+  }
+  
+  .nav__links a {
+    font-size: 14px; /* ลดขนาดตัวอักษร */
+    padding: 6px 10px;
+  }
 }
 
 /* ================== NOTION-LIKE EDITOR ================== */
